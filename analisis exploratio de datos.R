@@ -42,13 +42,12 @@ P.mayores.LES = sum(datos$peso > 228) / length(datos$peso)
 #### 2.2 Histograma de pesos por maquina ####
 
 #### 2.2.1 Maquina 1 #####
-maquina1 <- datos %>% filter(maquina != 2)
-maquina1
+maquina_1 <- datos %>% filter(maquina != 2)
 
-summary(maquina1$peso)
+summary(maquina_1$peso)
 
 hist(
-  maquina1$peso,
+  maquina_1$peso,
   main = "Histograma de pesos para la maquina 1",
   xlab="Peso (gr)",
   ylab="Frecuencia", 
@@ -59,13 +58,12 @@ hist(
 abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
 
 #### 2.2.2 Maquina 2 #####
-maquina2 <- datos %>% filter(maquina != 1)
-maquina2
+maquina_2 <- datos %>% filter(maquina != 1)
 
-summary(maquina2$peso)
+summary(maquina_2$peso)
 
 hist(
-  maquina2$peso,
+  maquina_2$peso,
   main = "Histograma de pesos para la maquina 2",
   xlab="Peso (gr)",
   ylab="Frecuencia", 
@@ -76,3 +74,74 @@ hist(
 abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
 
 par(mfrow = c(1, 2)) # Particionar ventana 
+
+
+#### 3. Analisis Maquina 1 ####
+
+#### 3.1  Operario A - Maquina 1 #####
+operario_a_maquina_1 <- maquina_1 %>% filter(operario != 'B')
+summary(operario_a_maquina_1$peso)
+sum(operario_a_maquina_1$peso < 212)
+
+hist(
+  operario_a_maquina_1$peso,
+  main = "Histograma de pesos para la maquina 1 con operario A",
+  xlab="Peso (gr)",
+  ylab="Frecuencia", 
+  xlim = c(206, 230),
+  col = "#98FB98"
+)
+
+abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
+
+#### 3.2  Operario B - Maquina 1 #####
+operario_b_maquina_1 <- maquina_1 %>% filter(operario != 'A')
+summary(operario_b_maquina_1$peso)
+sum(operario_b_maquina_1$peso < 212)
+
+hist(
+  operario_b_maquina_1$peso,
+  main = "Histograma de pesos para la maquina 1 con operario B",
+  xlab="Peso (gr)",
+  ylab="Frecuencia", 
+  xlim = c(206, 230),
+  col = "#98FB98"
+)
+
+abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
+
+#### 4. Analisis Maquina 2 ####
+
+#### 4.1  Operario A - Maquina 2 #####
+operario_a_maquina_2 <- maquina_2 %>% filter(operario != 'B')
+
+summary(operario_a_maquina_2$peso)
+sum(operario_a_maquina_2$peso < 212)
+
+hist(
+  operario_a_maquina_2$peso,
+  main = "Histograma de pesos para la maquina 2 con operario A",
+  xlab="Peso (gr)",
+  ylab="Frecuencia", 
+  xlim = c(206, 230),
+  col = "#EE6363"
+)
+
+abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
+
+#### 4.2  Operario B - Maquina 2 #####
+operario_b_maquina_2 <- maquina_2 %>% filter(operario != 'A')
+
+summary(operario_b_maquina_2$peso)
+sum(operario_b_maquina_2$peso < 212)
+
+hist(
+  operario_b_maquina_2$peso,
+  main = "Histograma de pesos para la maquina 2 con operario B",
+  xlab="Peso (gr)",
+  ylab="Frecuencia", 
+  xlim = c(206, 230),
+  col = "#98FB98"
+)
+
+abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
