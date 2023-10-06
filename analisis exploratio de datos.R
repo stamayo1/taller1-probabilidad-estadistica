@@ -5,6 +5,7 @@
 #------------------------------------------------------#
 # Alternatively, install just dplyr:
 install.packages("dplyr")
+library(dplyr) #Cargando la libreria dplyr
 
 ##### Taller Análisis Exploratorio del Datos #####
 
@@ -13,42 +14,45 @@ install.packages("dplyr")
 datos <- read.table("data_embutidos.txt", header=TRUE, dec=".")
 
 names(datos) #nombres de las variables en la BD.
-str(datos)  #Indica el tipo de variable
 head(datos) #Muestra las primeras lineas de la BD.
-
 
 #### 2. Analisis general de los pesos ####
 
-# Resumen de las medidas de tendencia central de los pesos de los embutidos
+# Resumen de las medidas de tendencia central de todos los pesos
+
 summary(datos$peso)
+sd(datos$peso)
 
 #### 2.1 Histograma general de los pesos para los embutidos ####
 hist(
   datos$peso,
   main = "Histograma de pesos de todos los embutidos",
   xlab="Peso (gr)",
-  ylab="Frecuencia", 
+  ylab="Frecuencia acumulada", 
   xlim = c(205, 230),
   col = "#ffe65d"
 )
 
+#Las especificaciones del peso son 220 ± 8 gr
 abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
 
 # Porcentaje de pesos que estan por fuera de los limites especificos 220 ± 8gr
-sum(datos$peso < 212)
-P.menores.LEI = sum(datos$peso < 212) / length(datos$peso)
-P.mayores.LES = sum(datos$peso > 228) / length(datos$peso)
+peso.menores.LEI = sum(datos$peso < 212) / length(datos$peso)
+peso.mayores.LES = sum(datos$peso > 228) / length(datos$peso)
 
-#### 2.2 Histograma de pesos por maquina ####
+#### 3. Analisis Maquina 1 ####
 
-#### 2.2.1 Maquina 1 #####
-maquina_1 <- datos %>% filter(maquina != 2)
+peso.maquina1 <- filter(datos, maquina == 1);
+peso.maquina1.mean <- tapply(peso.maquina1$peso, peso.maquina1[,1] , mean)
 
-summary(maquina_1$peso)
+summary(peso.maquina1$peso) #resumen de tendencias 
+sd(peso.maquina1$peso) #desviación 
+
+#### 3.1 Histograma Maquina 1 #####
 
 hist(
-  maquina_1$peso,
-  main = "Histograma de pesos para la maquina 1",
+  peso.maquina1$peso,
+  main = "Histograma de pesos maquina 1",
   xlab="Peso (gr)",
   ylab="Frecuencia", 
   xlim = c(205, 230),
@@ -57,91 +61,66 @@ hist(
 
 abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
 
-#### 2.2.2 Maquina 2 #####
-maquina_2 <- datos %>% filter(maquina != 1)
+#### 3.2 Dispersión  Maquina 1 #####
+dias  <- c(1:20)
+plot(dias, peso.maquina1.mean, pch=1,  xlab="Dia", ylab="Peso promedio (gr)", main="Diagrama de dispersion peso promedio maquina 1", xlim = c(0, 20), ylim=c(205,230))
+abline(h=c(212, 220, 228), lty=c(1, 2, 3), lwd=2, col="blue")
 
-summary(maquina_2$peso)
+#### 4 Analisis Maquina 2 ####
 
-hist(
-  maquina_2$peso,
-  main = "Histograma de pesos para la maquina 2",
-  xlab="Peso (gr)",
-  ylab="Frecuencia", 
-  xlim = c(206, 230),
-  col = "#CDC8B1"
-)
+peso.maquina2 <- filter(datos, maquina == 2);
+peso.maquina2.mean <- tapply(peso.maquina2$peso, peso.maquina2[,1] , mean)
 
-abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
+summary(peso.maquina2$peso) #resumen de tendencias 
+sd(peso.maquina2$peso) #desviación 
 
-par(mfrow = c(1, 2)) # Particionar ventana 
-
-
-#### 3. Analisis Maquina 1 ####
-
-#### 3.1  Operario A - Maquina 1 #####
-operario_a_maquina_1 <- maquina_1 %>% filter(operario != 'B')
-summary(operario_a_maquina_1$peso)
-sum(operario_a_maquina_1$peso < 212)
+#### 4.1 Histograma Maquina 2 #####
 
 hist(
-  operario_a_maquina_1$peso,
-  main = "Histograma de pesos para la maquina 1 con operario A",
+  peso.maquina2$peso,
+  main = "Histograma de pesos maquina 2",
   xlab="Peso (gr)",
   ylab="Frecuencia", 
-  xlim = c(206, 230),
+  xlim = c(205, 230),
   col = "#98FB98"
 )
 
 abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
 
-#### 3.2  Operario B - Maquina 1 #####
-operario_b_maquina_1 <- maquina_1 %>% filter(operario != 'A')
-summary(operario_b_maquina_1$peso)
-sum(operario_b_maquina_1$peso < 212)
+#### 4.2 Dispersión  Maquina 2 #####
+dias  <- c(1:20)
+plot(dias, peso.maquina2.mean, pch=1,  xlab="Dia", ylab="Peso promedio (gr)", main="Peso promedio maquina 2", xlim = c(0, 20), ylim=c(205,230))
+abline(h=c(212, 220, 228), lty=c(1, 2, 3), lwd=2, col="blue")
 
-hist(
-  operario_b_maquina_1$peso,
-  main = "Histograma de pesos para la maquina 1 con operario B",
-  xlab="Peso (gr)",
-  ylab="Frecuencia", 
-  xlim = c(206, 230),
-  col = "#98FB98"
-)
 
-abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
+#### 5 Analisis general Operario A ####
 
-#### 4. Analisis Maquina 2 ####
+peso.operarioA <- filter(datos, operario == 'A');
+peso.operarioA.mean <- tapply(peso.operarioA$peso, peso.operarioA[,1], mean)
 
-#### 4.1  Operario A - Maquina 2 #####
-operario_a_maquina_2 <- maquina_2 %>% filter(operario != 'B')
+summary(peso.operarioA$peso) #resumen de tendencias 
+sd(peso.operarioA$peso) #desviación
 
-summary(operario_a_maquina_2$peso)
-sum(operario_a_maquina_2$peso < 212)
+#### 5.1 Dispersión  operario A #####
+dias  <- c(1:length(peso.operarioA.mean))
 
-hist(
-  operario_a_maquina_2$peso,
-  main = "Histograma de pesos para la maquina 2 con operario A",
-  xlab="Peso (gr)",
-  ylab="Frecuencia", 
-  xlim = c(206, 230),
-  col = "#EE6363"
-)
+plot(dias, peso.operarioA.mean, pch=1,  xlab="Dia laborado", ylab="Peso promedio (gr)", main="Peso promedio operario a", ylim=c(205,230))
+abline(h=c(212, 220, 228), lty=c(1, 2, 3), lwd=2, col="blue")
 
-abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
 
-#### 4.2  Operario B - Maquina 2 #####
-operario_b_maquina_2 <- maquina_2 %>% filter(operario != 'A')
+#### 6. Analisis general Operario B ####
 
-summary(operario_b_maquina_2$peso)
-sum(operario_b_maquina_2$peso < 212)
+peso.operarioB <- filter(datos, operario == 'B');
+peso.operarioB.mean <- tapply(peso.operarioB$peso, peso.operarioB[,1], mean)
 
-hist(
-  operario_b_maquina_2$peso,
-  main = "Histograma de pesos para la maquina 2 con operario B",
-  xlab="Peso (gr)",
-  ylab="Frecuencia", 
-  xlim = c(206, 230),
-  col = "#98FB98"
-)
+summary(peso.operarioB$peso) #resumen de tendencias 
+sd(peso.operarioB$peso) #desviación
 
-abline(v=c(212, 220, 228), lty=c(2, 1, 2), lwd=2, col="blue")
+#### 6.1 Dispersión  operario B #####
+dias  <- c(1:length(peso.operarioB.mean))
+
+plot(dias, peso.operarioB.mean, pch=1,  xlab="Dia laborado", ylab="Peso promedio (gr)", main="Peso promedio operario b", ylim=c(205,230))
+abline(h=c(212, 220, 228), lty=c(1, 2, 3), lwd=2, col="blue")
+
+
+
